@@ -55,7 +55,7 @@ def normalize_angle(angle):
     norm_angle += 2 * np.pi if norm_angle < 0 else 0
     return norm_angle
 
-# returns the index og the group element with minimum distance from value (its nearest neighbor)
+# returns the index of the group element with minimum distance from value (its nearest neighbor)
 def nn(group, value):
     group = np.asarray(group)
     return (np.abs(group - value)).argmin()
@@ -118,7 +118,7 @@ def hough_transform(distances):
 
 # ----------------- EKF ALGORITHM -----------------
 
-# our implementation of the EKF algorithm is based on the following interpretation:
+# our implementation of the EKF algorithm is based on the following definitions:
 #   - https://arxiv.org/ftp/arxiv/papers/1204/1204.0375.pdf
 #   - https://medium.com/@jaems33/understanding-kalman-filters-with-python-2310e87b8f48
 
@@ -243,8 +243,8 @@ lidar.enablePointCloud()
 camera = robot.getDevice('camera')
 camera.enable(1)
 
-# storing the fov and image width of the camera, that are set 
-# respectively to 0.84 and 320 in the Webots world
+# storing the fov and image width of the camera, that are 
+# set respectively to 0.84 and 320 in the Webots world
 camera_width = camera.getWidth()
 camera_field_of_view = camera.getFov()
 
@@ -291,8 +291,8 @@ while robot.step(timestep) != -1:
     #
     init_position, init_orientation, velocity = epuck.getPosition(), epuck.getOrientation(), epuck.getVelocity()
     
-    # explicitly evaluating the starting orientation angle, normalizing it into the 
-    # [0, 2*pi] interval in the case that it is not already
+    # explicitly evaluating the starting orientation angle, normalizing 
+    # it into the [0, 2*pi] interval in the case that it is not already
     #
     theta_start = normalize_angle(np.arctan2(init_orientation[3], init_orientation[0]))
 
@@ -395,7 +395,7 @@ while robot.step(timestep) != -1:
 
                 break
 
-    # switch case to determin the operational mode of the robot (DEFAULT, AVOID_OBSTACLE_FLANK_OBSTACLE, SLAM)
+    # switch case to determine the operational mode of the robot (DEFAULT, AVOID_OBSTACLE_FLANK_OBSTACLE, SLAM)
     #
 
     # the DEFAULT action is that related to making the robot orient itself 
@@ -432,8 +432,8 @@ while robot.step(timestep) != -1:
         delta_par = near_obstacle[1] - theta_start % np.pi
         if np.abs(delta_par) >= 0.03:
 
-            # the external values of the lidar scanning are extracted, and in the braitenberg fashion,
-            # the roation direction is evaluated as the one that moves the robot in the freeer area
+            # the external values of the lidar scanning are extracted and, in the braitenberg fashion,
+            # the rotation direction is evaluated as the one that moves the robot in the freeer area
             left_corner_scan, right_corner_scan = lidar_values[0:30], lidar_values[horizontal_resolution-30:horizontal_resolution]
 
             left_corner_scan[left_corner_scan == inf] = 100
@@ -456,8 +456,8 @@ while robot.step(timestep) != -1:
                 left_motor.setVelocity(-1)
                 right_motor.setVelocity(1)
                 
-        # if delt_par is small (zero), it means that the robot's direction is parallel to the 
-        # obstacle, and it can now proceed to flank it
+        # if delt_par is small (zero), it means that the robot's direction 
+        # is parallel to the obstacle, and it can now proceed to flank it
         else:
             right_motor.setVelocity(0)
             left_motor.setVelocity(0)
@@ -579,8 +579,8 @@ while robot.step(timestep) != -1:
                     # update stage of the EKF algorithm
                     updated_position, Sigma_p = relative_pos_update_EKF(updated_position, Sigma_p, relative_pos_meas[i], Sigma_m, rec_obj_global_pos_2)
 
-            # if the farthest object is in close proximity to the robot, 
-            # then it slows doen in order to avoid collision
+            # if the farthest object is in close proximity to the 
+            # robot, then it slows doen in order to avoid collision
             if far_dist <= 0.05:
                 left_motor.setVelocity(1.0)
                 right_motor.setVelocity(1.0)
@@ -602,7 +602,7 @@ while robot.step(timestep) != -1:
                 w = 30.0 * delta_target_angle
 
                 # finding the horizontal steering velocities with the epuck's ROBOT_AXLE_LENGTH, 
-                # checking thatthey do not go over the maximum allowed one 
+                # checking that they do not go over the maximum allowed one 
                 new_left_vel, new_right_vel = v - (w * ROBOT_AXLE_LENGTH * 0.5), v + (w * ROBOT_AXLE_LENGTH * 0.5)
 
                 vl = new_left_vel if new_left_vel <= ROBOT_MAX_VELOCITY else ROBOT_MAX_VELOCITY
@@ -619,7 +619,7 @@ while robot.step(timestep) != -1:
                 SLAM_TO_DEFAULT = True
                 
     # the robot enters the SLAM mode if it is not already in it (ACTION_TYPE != 'SLAM') or it just 
-    # exited it(not SLAM_TO_DEFAULT) and the camera has detected a minimum number (3) of objects
+    # exited it (not SLAM_TO_DEFAULT) and the camera has detected a minimum number (3) of objects
     if ACTION_TYPE != 'SLAM' and not SLAM_TO_DEFAULT and len(camera.getRecognitionObjects()) >= 3:
 
         # we make sure that the robot enters the SLAM zone
