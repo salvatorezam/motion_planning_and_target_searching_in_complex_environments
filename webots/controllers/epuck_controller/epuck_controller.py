@@ -637,7 +637,7 @@ while robot.step(timestep) != -1:
         Sigma_p = np.array([[0.01, 0.0, 0.0],
                             [0.0, 0.01, 0.0],
                             [0.0, 0.0, np.pi/90]])
-
+                            
         is_slam_mode_triggered = True
         slam_counter = 0
 
@@ -645,4 +645,3 @@ while robot.step(timestep) != -1:
         ACTION_TYPE = 'SLAM'
 
     pass
-
