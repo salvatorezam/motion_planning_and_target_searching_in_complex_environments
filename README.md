@@ -7,4 +7,3 @@ This repository contains the presentation of the Robotics exam project of the Ma
 Below, a sample run of the presented procedure within the Webots robot simulation software:
 
 https://user-images.githubusercontent.com/38737837/203834741-641f5cd6-f819-45c9-92bb-1b6501092295.mp4
-
